@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Forensic Report — CASE-2026-001</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 40px;
+            line-height: 1.6;
+        }
+        .report-card {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .header {
+            border-bottom: 2px solid #00f2fe;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            margin: 0;
+            color: #00f2fe;
+            font-size: 26px;
+            letter-spacing: 1px;
+        }
+        .badge-demo {
+            background-color: #ef4444;
+            color: #ffffff;
+            font-weight: bold;
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .section-title {
+            color: #38bdf8;
+            font-size: 18px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .meta-item {
+            background: #0f172a;
+            padding: 12px 18px;
+            border-radius: 6px;
+            border-left: 3px solid #00f2fe;
+        }
+        .meta-label {
+            font-size: 12px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+        .meta-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: #f8fafc;
+            word-break: break-all;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        th {
+            background-color: #0f172a;
+            color: #38bdf8;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+        tr:nth-child(even) {
+            background-color: #162032;
+        }
+        .status-valid {
+            color: #4ade80;
+            font-weight: bold;
+        }
+        .status-partial {
+            color: #facc15;
+            font-weight: bold;
+        }
+        .status-corrupt {
+            color: #f87171;
+            font-weight: bold;
+        }
+        .disclaimer {
+            margin-top: 40px;
+            padding: 15px;
+            background-color: #451a03;
+            border: 1px solid #78350f;
+            border-radius: 6px;
+            color: #fde68a;
+            font-size: 13px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="report-card">
+        <div class="header">
+            <div>
+                <h1>DIGITAL FORENSICS INVESTIGATION REPORT</h1>
+                <div style="font-size: 13px; color: #94a3b8; margin-top: 4px;">SIH26149 Forensic Platform Prototype</div>
+            </div>
+            <span class="badge-demo">PROTOTYPE DEMO REPORT</span>
+        </div>
+
+        <div class="section-title">1. Case Metadata</div>
+        <div class="meta-grid">
+            <div class="meta-item">
+                <div class="meta-label">Case Identifier</div>
+                <div class="meta-value">CASE-2026-001</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Lead Investigator</div>
+                <div class="meta-value">Demo Investigator</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Creation Timestamp</div>
+                <div class="meta-value">2026-09-01 14:44:14</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">Case Description</div>
+                <div class="meta-value">Digital evidence recovery test on synthetic raw drive image.</div>
+            </div>
+        </div>
+
+        <div class="section-title">2. Evidence Media Summary</div>
+    
+        <div class="meta-grid">
+            <div class="meta-item">
+                <div class="meta-label">Evidence Image Name</div>
+                <div class="meta-value">demo_evidence.raw</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">File Size</div>
+                <div class="meta-value">46,276 bytes</div>
+            </div>
+            <div class="meta-item" style="grid-column: span 2;">
+                <div class="meta-label">SHA-256 Evidence Hash (Read-Only Verification)</div>
+                <div class="meta-value" style="font-family: monospace; color: #00f2fe;">3c468ed6111266b256e0c0d7e09c62660e11e42fa9e33d9c6f08bd6fb624b438</div>
+            </div>
+        </div>
+        
+        <div class="section-title">3. Recovery Statistics</div>
+        <div class="meta-grid">
+            <div class="meta-item">
+                <div class="meta-label">Total Artifacts Carved</div>
+                <div class="meta-value">32</div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-label">High Confidence (&ge;75%)</div>
+                <div class="meta-value" style="color: #4ade80;">32</div>
+            </div>
+            <div class="meta-item" style="grid-column: span 2;">
+                <div class="meta-label">Type Distribution</div>
+                <div class="meta-value">JPEG: 8, PNG: 8, PDF: 8, TXT: 8</div>
+            </div>
+        </div>
+
+        <div class="section-title">4. Recovered Artifact Manifest</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Filename</th>
+                    <th>Type</th>
+                    <th>Offset</th>
+                    <th>Size</th>
+                    <th>Confidence</th>
+                    <th>Status</th>
+                    <th>SHA-256 Hash</th>
+                </tr>
+            </thead>
+            <tbody>
+    
+            <tr>
+                <td>#1</td>
+                <td><strong>artifact_001.jpg</strong></td>
+                <td>JPEG</td>
+                <td>0x1D0C</td>
+                <td>4,703 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">8997ee6b7ec88361...</td>
+            </tr>
+        
+            <tr>
+                <td>#9</td>
+                <td><strong>artifact_001.jpg</strong></td>
+                <td>JPEG</td>
+                <td>0x1D0C</td>
+                <td>4,703 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">8997ee6b7ec88361...</td>
+            </tr>
+        
+            <tr>
+                <td>#17</td>
+                <td><strong>artifact_001.jpg</strong></td>
+                <td>JPEG</td>
+                <td>0x1D0C</td>
+                <td>4,703 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">8997ee6b7ec88361...</td>
+            </tr>
+        
+            <tr>
+                <td>#25</td>
+                <td><strong>artifact_001.jpg</strong></td>
+                <td>JPEG</td>
+                <td>0x1D0C</td>
+                <td>4,703 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">8997ee6b7ec88361...</td>
+            </tr>
+        
+            <tr>
+                <td>#2</td>
+                <td><strong>artifact_002.png</strong></td>
+                <td>PNG</td>
+                <td>0x33DC</td>
+                <td>1,812 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">731498fa559c1276...</td>
+            </tr>
+        
+            <tr>
+                <td>#10</td>
+                <td><strong>artifact_002.png</strong></td>
+                <td>PNG</td>
+                <td>0x33DC</td>
+                <td>1,812 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">731498fa559c1276...</td>
+            </tr>
+        
+            <tr>
+                <td>#18</td>
+                <td><strong>artifact_002.png</strong></td>
+                <td>PNG</td>
+                <td>0x33DC</td>
+                <td>1,812 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">731498fa559c1276...</td>
+            </tr>
+        
+            <tr>
+                <td>#26</td>
+                <td><strong>artifact_002.png</strong></td>
+                <td>PNG</td>
+                <td>0x33DC</td>
+                <td>1,812 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">731498fa559c1276...</td>
+            </tr>
+        
+            <tr>
+                <td>#3</td>
+                <td><strong>artifact_003.pdf</strong></td>
+                <td>PDF</td>
+                <td>0x4422</td>
+                <td>664 B</td>
+                <td><strong>75%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">df0d77de12126e58...</td>
+            </tr>
+        
+            <tr>
+                <td>#11</td>
+                <td><strong>artifact_003.pdf</strong></td>
+                <td>PDF</td>
+                <td>0x4422</td>
+                <td>664 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">df0d77de12126e58...</td>
+            </tr>
+        
+            <tr>
+                <td>#19</td>
+                <td><strong>artifact_003.pdf</strong></td>
+                <td>PDF</td>
+                <td>0x4422</td>
+                <td>664 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">df0d77de12126e58...</td>
+            </tr>
+        
+            <tr>
+                <td>#27</td>
+                <td><strong>artifact_003.pdf</strong></td>
+                <td>PDF</td>
+                <td>0x4422</td>
+                <td>664 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">df0d77de12126e58...</td>
+            </tr>
+        
+            <tr>
+                <td>#4</td>
+                <td><strong>artifact_004.txt</strong></td>
+                <td>TXT</td>
+                <td>0x51BF</td>
+                <td>193 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">c84c35176ec8f017...</td>
+            </tr>
+        
+            <tr>
+                <td>#12</td>
+                <td><strong>artifact_004.txt</strong></td>
+                <td>TXT</td>
+                <td>0x51BF</td>
+                <td>193 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">c84c35176ec8f017...</td>
+            </tr>
+        
+            <tr>
+                <td>#20</td>
+                <td><strong>artifact_004.txt</strong></td>
+                <td>TXT</td>
+                <td>0x51BF</td>
+                <td>193 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">c84c35176ec8f017...</td>
+            </tr>
+        
+            <tr>
+                <td>#28</td>
+                <td><strong>artifact_004.txt</strong></td>
+                <td>TXT</td>
+                <td>0x51BF</td>
+                <td>193 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">c84c35176ec8f017...</td>
+            </tr>
+        
+            <tr>
+                <td>#5</td>
+                <td><strong>artifact_005.jpg</strong></td>
+                <td>JPEG</td>
+                <td>0x5BC2</td>
+                <td>4,369 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">f1e46b448a9751a9...</td>
+            </tr>
+        
+            <tr>
+                <td>#13</td>
+                <td><strong>artifact_005.jpg</strong></td>
+                <td>JPEG</td>
+                <td>0x5BC2</td>
+                <td>4,369 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">f1e46b448a9751a9...</td>
+            </tr>
+        
+            <tr>
+                <td>#21</td>
+                <td><strong>artifact_005.jpg</strong></td>
+                <td>JPEG</td>
+                <td>0x5BC2</td>
+                <td>4,369 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">f1e46b448a9751a9...</td>
+            </tr>
+        
+            <tr>
+                <td>#29</td>
+                <td><strong>artifact_005.jpg</strong></td>
+                <td>JPEG</td>
+                <td>0x5BC2</td>
+                <td>4,369 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">f1e46b448a9751a9...</td>
+            </tr>
+        
+            <tr>
+                <td>#6</td>
+                <td><strong>artifact_006.pdf</strong></td>
+                <td>PDF</td>
+                <td>0x72A1</td>
+                <td>659 B</td>
+                <td><strong>75%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">aee1d1eb5881368f...</td>
+            </tr>
+        
+            <tr>
+                <td>#14</td>
+                <td><strong>artifact_006.pdf</strong></td>
+                <td>PDF</td>
+                <td>0x72A1</td>
+                <td>659 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">aee1d1eb5881368f...</td>
+            </tr>
+        
+            <tr>
+                <td>#22</td>
+                <td><strong>artifact_006.pdf</strong></td>
+                <td>PDF</td>
+                <td>0x72A1</td>
+                <td>659 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">aee1d1eb5881368f...</td>
+            </tr>
+        
+            <tr>
+                <td>#30</td>
+                <td><strong>artifact_006.pdf</strong></td>
+                <td>PDF</td>
+                <td>0x72A1</td>
+                <td>659 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">aee1d1eb5881368f...</td>
+            </tr>
+        
+            <tr>
+                <td>#7</td>
+                <td><strong>artifact_007.txt</strong></td>
+                <td>TXT</td>
+                <td>0x83C4</td>
+                <td>158 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">a4af711832a212b8...</td>
+            </tr>
+        
+            <tr>
+                <td>#15</td>
+                <td><strong>artifact_007.txt</strong></td>
+                <td>TXT</td>
+                <td>0x83C4</td>
+                <td>158 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">a4af711832a212b8...</td>
+            </tr>
+        
+            <tr>
+                <td>#23</td>
+                <td><strong>artifact_007.txt</strong></td>
+                <td>TXT</td>
+                <td>0x83C4</td>
+                <td>158 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">a4af711832a212b8...</td>
+            </tr>
+        
+            <tr>
+                <td>#31</td>
+                <td><strong>artifact_007.txt</strong></td>
+                <td>TXT</td>
+                <td>0x83C4</td>
+                <td>158 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">a4af711832a212b8...</td>
+            </tr>
+        
+            <tr>
+                <td>#8</td>
+                <td><strong>artifact_008.png</strong></td>
+                <td>PNG</td>
+                <td>0x8D0C</td>
+                <td>1,976 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">08b48a7613539f16...</td>
+            </tr>
+        
+            <tr>
+                <td>#16</td>
+                <td><strong>artifact_008.png</strong></td>
+                <td>PNG</td>
+                <td>0x8D0C</td>
+                <td>1,976 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">08b48a7613539f16...</td>
+            </tr>
+        
+            <tr>
+                <td>#24</td>
+                <td><strong>artifact_008.png</strong></td>
+                <td>PNG</td>
+                <td>0x8D0C</td>
+                <td>1,976 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">08b48a7613539f16...</td>
+            </tr>
+        
+            <tr>
+                <td>#32</td>
+                <td><strong>artifact_008.png</strong></td>
+                <td>PNG</td>
+                <td>0x8D0C</td>
+                <td>1,976 B</td>
+                <td><strong>100%</strong></td>
+                <td class="status-valid">VALID</td>
+                <td style="font-family: monospace; font-size: 11px;">08b48a7613539f16...</td>
+            </tr>
+        
+            </tbody>
+        </table>
+
+        <div class="section-title">5. Chain of Custody Audit Log</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Operation</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+    
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:44:14</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">CASE_CREATED</span></td>
+                <td>Initial Case CASE-2026-001 created automatically.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:44:14</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">EVIDENCE_IMPORTED</span></td>
+                <td>Synthetic disk image demo_evidence.raw imported.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:44:14</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">HASH_CALCULATED</span></td>
+                <td>SHA-256 evidence integrity hash computed: 3c468ed6111266b256e0c0d7e09c62660e11e42fa9e33d9c6f08bd6fb624b438</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:44:14</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_STARTED</span></td>
+                <td>Started forensic read-only analysis on evidence image: demo_evidence.raw</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:45:19</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_STARTED</span></td>
+                <td>Started forensic read-only analysis on evidence image: demo_evidence.raw</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:46:20</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_STARTED</span></td>
+                <td>Started forensic read-only analysis on evidence image: demo_evidence.raw</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:46:54</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_STARTED</span></td>
+                <td>Started forensic read-only analysis on evidence image: demo_evidence.raw</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:47:21</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_STARTED</span></td>
+                <td>Started forensic read-only analysis on evidence image: demo_evidence.raw</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:47:47</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_STARTED</span></td>
+                <td>Started forensic read-only analysis on evidence image: demo_evidence.raw</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_COMPLETED</span></td>
+                <td>Forensic scan completed. Recovered 8 total artifacts.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved JPEG artifact (artifact_001.jpg) at offset 0x1D0C (4703 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PNG artifact (artifact_002.png) at offset 0x33DC (1812 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PDF artifact (artifact_003.pdf) at offset 0x4422 (664 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved TXT artifact (artifact_004.txt) at offset 0x51BF (193 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_STARTED</span></td>
+                <td>Started forensic read-only analysis on evidence image: demo_evidence.raw</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved JPEG artifact (artifact_005.jpg) at offset 0x5BC2 (4369 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PDF artifact (artifact_006.pdf) at offset 0x72A1 (659 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved TXT artifact (artifact_007.txt) at offset 0x83C4 (158 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved JPEG artifact (artifact_001.jpg) at offset 0x1D0C (4703 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PNG artifact (artifact_002.png) at offset 0x33DC (1812 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PDF artifact (artifact_003.pdf) at offset 0x4422 (664 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved TXT artifact (artifact_004.txt) at offset 0x51BF (193 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved JPEG artifact (artifact_005.jpg) at offset 0x5BC2 (4369 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PDF artifact (artifact_006.pdf) at offset 0x72A1 (659 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved TXT artifact (artifact_007.txt) at offset 0x83C4 (158 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PNG artifact (artifact_008.png) at offset 0x8D0C (1976 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_COMPLETED</span></td>
+                <td>Forensic scan completed. Recovered 8 total artifacts.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PNG artifact (artifact_008.png) at offset 0x8D0C (1976 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:09</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_COMPLETED</span></td>
+                <td>Forensic scan completed. Recovered 8 total artifacts.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:52:26</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">REPORT_GENERATED</span></td>
+                <td>Generated forensic investigation report: Forensic_Report_CASE-2026-001.html</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:54:10</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_STARTED</span></td>
+                <td>Started forensic read-only analysis on evidence image: demo_evidence.raw</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:54:10</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved JPEG artifact (artifact_001.jpg) at offset 0x1D0C (4703 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:54:10</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PNG artifact (artifact_002.png) at offset 0x33DC (1812 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:54:10</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PDF artifact (artifact_003.pdf) at offset 0x4422 (664 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:54:10</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved TXT artifact (artifact_004.txt) at offset 0x51BF (193 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:54:10</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved JPEG artifact (artifact_005.jpg) at offset 0x5BC2 (4369 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:54:10</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PDF artifact (artifact_006.pdf) at offset 0x72A1 (659 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:54:10</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved TXT artifact (artifact_007.txt) at offset 0x83C4 (158 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:54:10</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ARTIFACT_RECOVERED</span></td>
+                <td>Carved PNG artifact (artifact_008.png) at offset 0x8D0C (1976 bytes) with 100% confidence.</td>
+            </tr>
+        
+            <tr>
+                <td style="font-size: 11px; color: #94a3b8;">2026-09-01 14:54:10</td>
+                <td><span style="color: #00f2fe; font-weight: 600;">ANALYSIS_COMPLETED</span></td>
+                <td>Forensic scan completed. Recovered 8 total artifacts.</td>
+            </tr>
+        
+            </tbody>
+        </table>
+
+        <div class="disclaimer">
+            <strong>NOTICE:</strong> This document was generated automatically by the SIH26149 Prototype Digital Forensics Workstation. All disk image operations were executed in READ-ONLY mode.
+        </div>
+    </div>
+</body>
+</html>
+    

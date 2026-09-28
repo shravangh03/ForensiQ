@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="slate-zinc">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>{% block title %}ForensiQ Platform{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleMobileSidebar()"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="appSidebar">
+        <div class="brand">
+            <div class="brand-icon">Q</div>
+            <div class="brand-text">ForensiQ<br><span style="font-size: 10px; color: var(--text-highlight); text-transform: uppercase;">SIH26149 MVP</span></div>
+            <button class="mobile-close-btn" onclick="toggleMobileSidebar()" aria-label="Close Navigation Menu">✕</button>
+        </div>
+
+        <ul class="nav-list">
+            <li class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+                <a href="{{ url_for('dashboard') }}" onclick="closeMobileSidebar()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Dashboard
+                </a>
+            </li>
+            <li class="nav-item {% if active_page == 'cases' %}active{% endif %}">
+                <a href="{{ url_for('cases_view') }}" onclick="closeMobileSidebar()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                    Cases & Evidence
+                </a>
+            </li>
+            <li class="nav-item {% if active_page == 'recovery' %}active{% endif %}">
+                <a href="{{ url_for('recovery_studio') }}" onclick="closeMobileSidebar()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path></svg>
+                    Recovery Studio
+                </a>
+            </li>
+            <li class="nav-item {% if active_page == 'artifacts' %}active{% endif %}">
+                <a href="{{ url_for('artifacts_view') }}" onclick="closeMobileSidebar()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    Artifact Explorer
+                </a>
+            </li>
+            <li class="nav-item {% if active_page == 'audit' %}active{% endif %}">
+                <a href="{{ url_for('audit_view') }}" onclick="closeMobileSidebar()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    Audit Trail
+                </a>
+            </li>
+            <li class="nav-item {% if active_page == 'reports' %}active{% endif %}">
+                <a href="{{ url_for('reports_view') }}" onclick="closeMobileSidebar()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    Forensic Reports
+                </a>
+            </li>
+            <li class="nav-item {% if active_page == 'sanitization' %}active{% endif %}">
+                <a href="{{ url_for('sanitization_view') }}" onclick="closeMobileSidebar()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    Eraser Simulation
+                </a>
+            </li>
+            <li class="nav-item {% if active_page == 'ai' %}active{% endif %}">
+                <a href="{{ url_for('ai_assistant_view') }}" onclick="closeMobileSidebar()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    AI Assistant
+                </a>
+            </li>
+        </ul>
+
+        <div class="sys-status">
+            <div><span class="status-indicator"></span> <strong>READ-ONLY GUARD</strong></div>
+            <div style="font-size: 10px; margin-top: 4px; color: var(--text-muted);">Hardware Write-Block Active</div>
+        </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <div class="main-wrapper">
+        <header class="header-bar">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Open Navigation Menu">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <div class="page-title">{% block page_title %}ForensiQ Workstation{% endblock %}</div>
+            </div>
+
+            <div class="header-actions">
+                <!-- Theme Selector -->
+                <div class="theme-select-container">
+                    <svg width="15" height="15" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+                    <select id="themeSelector" onchange="changeTheme(this.value)" class="form-control theme-select-input">
+                        <option value="slate-zinc">Slate & Zinc Enterprise Dark</option>
+                        <option value="cyber-midnight">Cyber Midnight</option>
+                        <option value="emerald-matrix">Emerald Matrix</option>
+                        <option value="obsidian-crimson">Obsidian Crimson</option>
+                        <option value="zinc-light">Zinc Enterprise Light</option>
+                    </select>
+                </div>
+                <span class="badge badge-valid demo-badge">SAFE DEMO</span>
+                <div class="user-info">Investigator: <strong style="color: var(--text-main);">Demo Analyst</strong></div>
+            </div>
+        </header>
+
+        <main class="content-area">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Artifact Modal Popup -->
+    <div class="modal-overlay" id="artifactModal">
+        <div class="modal-card">
+            <div id="artifactModalBody">Loading...</div>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="closeModal()">Close Window</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

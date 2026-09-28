@@ -1,0 +1,6 @@
+--- FORENSIC TEXT DOCUMENT ---
+LABEL: CASE NOTES
+-------------------------------
+Suspect attempted file deletion at 14:22.
+Recovered artifacts include images and PDFs.
+--- END FORENSIC TEXT ---

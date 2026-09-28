@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Artifact Explorer — ForensiQ{% endblock %}
+{% block page_title %}ForensiQ Recovered Artifact Explorer{% endblock %}
+
+{% block content %}
+<!-- Classification Statistics -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div>
+            <div class="stat-label">Total Artifacts</div>
+            <div class="stat-val">{{ total_count }}</div>
+        </div>
+        <svg width="28" height="28" fill="none" stroke="var(--text-highlight)" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path></svg>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-label">JPEG Images</div>
+            <div class="stat-val" style="color: var(--accent-rose);">{{ counts.get('JPEG', 0) }}</div>
+        </div>
+        <svg width="28" height="28" fill="none" stroke="var(--accent-rose)" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-label">PNG Graphics</div>
+            <div class="stat-val" style="color: var(--accent-blue);">{{ counts.get('PNG', 0) }}</div>
+        </div>
+        <svg width="28" height="28" fill="none" stroke="var(--accent-blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-label">PDF Documents</div>
+            <div class="stat-val" style="color: var(--accent-amber);">{{ counts.get('PDF', 0) }}</div>
+        </div>
+        <svg width="28" height="28" fill="none" stroke="var(--accent-amber)" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+    </div>
+    <div class="stat-card">
+        <div>
+            <div class="stat-label">Text Logs</div>
+            <div class="stat-val" style="color: var(--accent-emerald);">{{ counts.get('TXT', 0) }}</div>
+        </div>
+        <svg width="28" height="28" fill="none" stroke="var(--accent-emerald)" stroke-width="2" viewBox="0 0 24 24"><line x1="17" y1="10" x2="3" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="3" y2="14"></line><line x1="17" y1="18" x2="3" y2="18"></line></svg>
+    </div>
+</div>
+
+<!-- Filter Bar & Table -->
+<div class="card">
+    <div class="card-title">
+        <span>Carved Artifact Manifest</span>
+        <div style="display: flex; gap: 8px;">
+            <select id="caseFilter" class="form-control" style="width: auto; padding: 6px 12px; font-size: 12px;" onchange="location.href='{{ url_for('artifacts_view') }}?case_id=' + this.value">
+                <option value="">All Cases</option>
+                {% for c in cases %}
+                <option value="{{ c.case_id }}" {% if selected_case_id == c.case_id %}selected{% endif %}>{{ c.case_id }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Artifact Name</th>
+                    <th>Type</th>
+                    <th>Offset</th>
+                    <th>Size</th>
+                    <th>Confidence</th>
+                    <th>Status</th>
+                    <th>SHA-256 Digest</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for art in artifacts %}
+                <tr>
+                    <td>#{{ art.id }}</td>
+                    <td><strong>{{ art.filename }}</strong></td>
+                    <td><span class="badge" style="background: var(--bg-input); color: var(--text-highlight); border: 1px solid var(--border-color);">{{ art.file_type }}</span></td>
+                    <td><code>0x{{ "%X"|format(art.offset) }}</code></td>
+                    <td>{{ "{:,}".format(art.size) }} B</td>
+                    <td><strong style="color: {% if art.confidence >= 75 %}var(--accent-emerald){% else %}var(--accent-amber){% endif %};">{{ art.confidence }}%</strong></td>
+                    <td><span class="badge badge-{% if art.confidence >= 75 %}valid{% else %}corrupt{% endif %}">{{ art.validation_status }}</span></td>
+                    <td><code style="font-size: 11px; color: var(--text-muted);">{{ art.sha256[:12] }}...</code></td>
+                    <td>
+                        <button onclick="openArtifactModal({{ art.id }})" class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;">
+                            Inspect Hex & Details
+                        </button>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                        No carved artifacts found. Run analysis in Recovery Studio!
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

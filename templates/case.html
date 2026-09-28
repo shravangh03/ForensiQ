@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Case & Evidence Management — ForensiQ{% endblock %}
+{% block page_title %}ForensiQ Case & Evidence Management{% endblock %}
+
+{% block content %}
+<div class="grid-2col">
+
+    <!-- Create Case Form -->
+    <div class="card">
+        <div class="card-title">Create New Forensic Case</div>
+        <form action="{{ url_for('create_case') }}" method="POST">
+            <div class="form-group">
+                <label class="form-label">Case Identifier (Case ID)</label>
+                <input type="text" name="case_id" class="form-control" placeholder="e.g. CASE-2026-001" value="CASE-2026-001" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Lead Investigator Name</label>
+                <input type="text" name="investigator" class="form-control" placeholder="e.g. Demo Investigator" value="Demo Investigator" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Investigation Description</label>
+                <textarea name="description" class="form-control" rows="3" placeholder="Case details, warrant number, or objective...">Digital evidence recovery test on synthetic raw drive image.</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                Create Case
+            </button>
+        </form>
+    </div>
+
+    <!-- Import Evidence Disk Image -->
+    <div class="card">
+        <div class="card-title">Import Disk Image (.raw / .dd)</div>
+        <form action="{{ url_for('import_evidence') }}" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label class="form-label">Select Case</label>
+                <select name="case_id" class="form-control" required>
+                    {% for c in cases %}
+                    <option value="{{ c.case_id }}">{{ c.case_id }} — {{ c.investigator }}</option>
+                    {% else %}
+                    <option value="">No cases available. Create one first!</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Quick Select Pre-Generated Demo Evidence</label>
+                <div style="background: var(--bg-input); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                    <span style="font-size: 13px; color: var(--text-highlight);">data/demo_evidence.raw (Synthetic Drive Image)</span>
+                    <input type="checkbox" name="use_demo_image" value="true" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Or Upload Custom Raw Disk Image (.raw, .dd, .img)</label>
+                <input type="file" name="evidence_file" class="form-control" accept=".raw,.dd,.img">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                🔒 Import & Calculate SHA-256 Hash
+            </button>
+        </form>
+    </div>
+
+</div>
+
+<!-- Existing Cases Table -->
+<div class="card" style="margin-top: 24px;">
+    <div class="card-title">Registered Cases & Imported Evidence</div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Case ID</th>
+                    <th>Investigator</th>
+                    <th>Evidence Image</th>
+                    <th>File Size</th>
+                    <th>SHA-256 Hash</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in cases %}
+                    {% set ev_items = evidence_by_case.get(c.case_id, []) %}
+                    {% if ev_items %}
+                        {% for ev in ev_items %}
+                        <tr>
+                            <td><strong style="color: var(--text-highlight);">{{ c.case_id }}</strong></td>
+                            <td>{{ c.investigator }}</td>
+                            <td><code>{{ ev.filename }}</code></td>
+                            <td>{{ "{:,}".format(ev.size) }} B</td>
+                            <td>
+                                {% if ev.sha256 %}
+                                <span style="font-family: monospace; font-size: 11px; color: var(--accent-emerald);">✓ {{ ev.sha256[:16] }}...</span>
+                                {% else %}
+                                <span style="color: var(--accent-amber); font-size: 11px;">Calculating...</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('recovery_studio', case_id=c.case_id) }}" class="btn btn-primary" style="padding: 4px 10px; font-size: 12px;">Run Recovery Scan</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td><strong style="color: var(--text-highlight);">{{ c.case_id }}</strong></td>
+                            <td>{{ c.investigator }}</td>
+                            <td colspan="3" style="color: var(--text-muted);">No evidence media attached yet.</td>
+                            <td>
+                                <span style="font-size: 12px; color: var(--text-muted);">Import above</span>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 25px;">No cases created yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

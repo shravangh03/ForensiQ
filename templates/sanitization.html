@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Eraser Simulator — ForensiQ{% endblock %}
+{% block page_title %}ForensiQ Secure Data Erasure Simulator (SAFE DEMO MODE){% endblock %}
+
+{% block content %}
+<!-- Safety Warning Card -->
+<div style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--accent-amber); border-radius: 12px; padding: 18px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+    <div>
+        <h4 style="color: var(--accent-amber); margin: 0 0 4px 0; display: flex; align-items: center; gap: 8px;">
+            ⚠️ SAFE DEMO MODE ACTIVE
+        </h4>
+        <div style="font-size: 13px; color: var(--text-main);">
+            Physical drive wiping operations are disabled for this prototype demonstration. All sanitization workflows operate as non-destructive visual simulations on synthetic test files.
+        </div>
+    </div>
+    <span class="badge badge-partial" style="font-size: 13px; padding: 6px 14px;">NO HARDWARE WIPE</span>
+</div>
+
+<div class="grid-2col">
+
+    <!-- Module 1: Secure Drive Eraser Placeholder -->
+    <div class="card">
+        <div class="card-title">Module 1: Secure Drive Eraser (Hardware Sanitize)</div>
+        <div class="form-group">
+            <label class="form-label">Target Storage Device (Simulated)</label>
+            <select class="form-control" disabled>
+                <option>[SAFE SIMULATION] NVMe SSD — Samsung 980 PRO 1TB (/dev/nvme0n1)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Sanitization Protocol Standard</label>
+            <select id="simDriveMethodSelect" class="form-control">
+                <option value="IEEE 2883-2022 Purge (NVMe Sanitize Block Erase)">IEEE 2883-2022 Purge (NVMe Sanitize Block Erase)</option>
+                <option value="NIST SP 800-88 Rev. 2 Clear (Single-Pass 0x00 Overwrite)">NIST SP 800-88 Rev. 2 Clear (Single-Pass 0x00 Overwrite)</option>
+                <option value="DoD 5220.22-M 3-Pass (0x00, 0xFF, CSPRNG Random)">DoD 5220.22-M 3-Pass (0x00, 0xFF, CSPRNG Random)</option>
+                <option value="Gutmann 35-Pass Algorithm">Gutmann 35-Pass Algorithm</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Post-Erasure Verification Protocol</label>
+            <select class="form-control">
+                <option>100% Full Sector Read-Back + SHA-256 Block Hashing</option>
+                <option>10% Statistical Sector Sample Verification</option>
+            </select>
+        </div>
+        <button onclick="runSanitizationSim()" class="btn btn-primary" style="width: 100%; justify-content: center;">
+            ⚡ Run Drive Erasure Simulation
+        </button>
+    </div>
+
+    <!-- Module 2: Secure File & Folder Eraser -->
+    <div class="card">
+        <div class="card-title">Module 2: Secure File & Folder Eraser</div>
+        <div class="form-group">
+            <label class="form-label">Select Target Test File</label>
+            <select id="simFileSelect" class="form-control">
+                <option value="confidential_memo.docx">confidential_memo.docx (Test File)</option>
+                <option value="financial_secrets.pdf">financial_secrets.pdf (Test File)</option>
+                <option value="temp_slack_space.bin">temp_slack_space.bin (Test Cluster)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Metadata & Slack Cleansing Options</label>
+            <div style="background: var(--bg-input); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; display: flex; flex-direction: column; gap: 8px;">
+                <label><input type="checkbox" checked disabled> Zero out NTFS MFT record / Inode entry</label>
+                <label><input type="checkbox" checked disabled> Wipe RAM slack & sector slack space</label>
+                <label><input type="checkbox" checked disabled> Purge Alternate Data Streams (ADS)</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Erasure Pass Algorithm</label>
+            <select id="simMethodSelect" class="form-control">
+                <option value="DoD 5220.22-M 3-Pass">DoD 5220.22-M 3-Pass</option>
+                <option value="IEEE 2883-2022 Purge">IEEE 2883-2022 Purge</option>
+            </select>
+        </div>
+        <button onclick="runSanitizationSim()" class="btn btn-primary" style="width: 100%; justify-content: center;">
+            🛡️ Execute File Wipe Simulation
+        </button>
+    </div>
+
+</div>
+
+<!-- Simulation Execution Terminal Card -->
+<div class="card" style="margin-top: 24px;">
+    <div class="card-title">Sanitization Execution & Audit Logger Terminal</div>
+    <div class="progress-container">
+        <div id="simProgressBar" class="progress-bar"></div>
+    </div>
+    <pre id="simOutput" class="hex-grid" style="color: var(--accent-emerald); min-height: 180px;">[SAFE DEMO MODE READY] Click any simulation button above to demonstrate the sanitization execution workflow...</pre>
+</div>
+{% endblock %}

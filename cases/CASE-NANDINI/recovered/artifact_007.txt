@@ -1,0 +1,6 @@
+--- FORENSIC TEXT DOCUMENT ---
+LABEL: IP LOGS
+-------------------------------
+192.168.1.105 - AUTH SUCCESS
+10.0.0.42 - FILE ACCESSED
+--- END FORENSIC TEXT ---

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — ForensiQ Workstation{% endblock %}
+{% block page_title %}ForensiQ Forensic & Sanitization Dashboard{% endblock %}
+
+{% block content %}
+<!-- Overview Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div>
+            <div class="stat-label">Active Cases</div>
+            <div class="stat-val">{{ total_cases }}</div>
+        </div>
+        <svg width="32" height="32" fill="none" stroke="var(--text-highlight)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+    </div>
+
+    <div class="stat-card">
+        <div>
+            <div class="stat-label">Evidence Images</div>
+            <div class="stat-val">{{ total_evidence }}</div>
+        </div>
+        <svg width="32" height="32" fill="none" stroke="var(--accent-blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12" y2="6"></line><line x1="6" y1="12" x2="18" y2="12"></line></svg>
+    </div>
+
+    <div class="stat-card">
+        <div>
+            <div class="stat-label">Artifacts Carved</div>
+            <div class="stat-val">{{ total_artifacts }}</div>
+        </div>
+        <svg width="32" height="32" fill="none" stroke="var(--accent-emerald)" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+    </div>
+
+    <div class="stat-card">
+        <div>
+            <div class="stat-label">High Confidence (&ge;75%)</div>
+            <div class="stat-val" style="color: var(--accent-emerald);">{{ high_conf_count }}</div>
+        </div>
+        <svg width="32" height="32" fill="none" stroke="var(--accent-emerald)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+    </div>
+</div>
+
+<!-- Quick Actions & Case Overview -->
+<div class="grid-2fr-1fr">
+    
+    <!-- Recent Cases Table -->
+    <div class="card">
+        <div class="card-title">
+            <span>Recent Active Cases</span>
+            <a href="{{ url_for('cases_view') }}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">View All</a>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Case ID</th>
+                        <th>Investigator</th>
+                        <th>Created At</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in recent_cases %}
+                    <tr>
+                        <td><strong style="color: var(--text-highlight);">{{ c.case_id }}</strong></td>
+                        <td>{{ c.investigator }}</td>
+                        <td>{{ c.created_at }}</td>
+                        <td>
+                            <a href="{{ url_for('recovery_studio', case_id=c.case_id) }}" class="btn btn-primary" style="padding: 4px 10px; font-size: 12px;">Run Recovery</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 25px;">No cases created yet. Click below to create your first case!</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Quick Operations Card -->
+    <div class="card">
+        <div class="card-title">Quick Actions</div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a href="{{ url_for('cases_view') }}" class="btn btn-primary" style="justify-content: center;">
+                + Create New Case
+            </a>
+            <a href="{{ url_for('recovery_studio') }}" class="btn btn-secondary" style="justify-content: center;">
+                ⚡ Launch Recovery Studio
+            </a>
+            <a href="{{ url_for('ai_assistant_view') }}" class="btn btn-secondary" style="justify-content: center; border-color: var(--accent-primary); color: var(--text-highlight);">
+                🤖 AI Forensic Assistant
+            </a>
+            <a href="{{ url_for('sanitization_view') }}" class="btn btn-secondary" style="justify-content: center;">
+                🛡️ Eraser Simulator
+            </a>
+        </div>
+
+        <div style="margin-top: 25px; padding: 15px; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--border-color); font-size: 12px; color: var(--text-muted);">
+            <strong style="color: var(--text-main);">Architecture Note:</strong><br>
+            For this hackathon demonstration, all disk media operations execute in <strong>Read-Only SAFE DEMO MODE</strong>. Original disk images remain untouched.
+        </div>
+    </div>
+</div>
+{% endblock %}

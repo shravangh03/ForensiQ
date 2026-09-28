@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Forensic Reports — ForensiQ{% endblock %}
+{% block page_title %}ForensiQ Investigation Report Generator{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-title">Generate Case Investigation Report</div>
+    
+    <div class="grid-2fr-1fr" style="align-items: end;">
+        <div class="form-group" style="margin: 0;">
+            <label class="form-label">Select Case</label>
+            <select id="reportCaseSelect" class="form-control">
+                {% for c in cases %}
+                <option value="{{ c.case_id }}">{{ c.case_id }} — {{ c.investigator }}</option>
+                {% else %}
+                <option value="">No cases available</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <button onclick="generateReport()" class="btn btn-primary" style="width: 100%; justify-content: center; height: 42px;">
+                📄 Generate HTML Report
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="card" id="reportPreviewArea">
+    <div class="card-title">Report Preview & Export Center</div>
+    <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+        Select a case above and click <strong>Generate HTML Report</strong> to build the formal court-admissible audit document.
+    </div>
+</div>
+
+<script>
+async function generateReport() {
+    const caseId = document.getElementById('reportCaseSelect').value;
+    if (!caseId) return alert("Please select a valid case!");
+
+    const previewArea = document.getElementById('reportPreviewArea');
+    previewArea.innerHTML = '<div style="text-align:center; padding:40px; color: var(--text-highlight);">Generating ForensiQ Investigation Report...</div>';
+
+    try {
+        const response = await fetch(`/api/reports/generate?case_id=${caseId}`, { method: 'POST' });
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            previewArea.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:15px; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                    <h3 style="margin:0; color: var(--accent-emerald); font-size:16px;">✓ ForensiQ Report Generated Successfully!</h3>
+                    <div style="display:flex; gap:10px;">
+                        <a href="/reports/view/${caseId}" target="_blank" class="btn btn-primary">Open Report in Full Tab</a>
+                    </div>
+                </div>
+
+                <div style="font-size:13px; color: var(--text-muted); margin-bottom:15px; word-break:break-all;">
+                    Report Path: <code>${data.report_path}</code>
+                </div>
+
+                <iframe src="/reports/view/${caseId}" style="width:100%; height:600px; border:1px solid var(--border-color); border-radius:8px; background: var(--bg-dark);"></iframe>
+            `;
+        } else {
+            previewArea.innerHTML = `<div style="color: var(--accent-rose); padding:20px;">Report generation failed: ${data.message}</div>`;
+        }
+    } catch(err) {
+        previewArea.innerHTML = `<div style="color: var(--accent-rose); padding:20px;">Report generation error: ${err}</div>`;
+    }
+}
+</script>
+{% endblock %}

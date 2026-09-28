@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Audit Trail — ForensiQ{% endblock %}
+{% block page_title %}ForensiQ Chain of Custody Audit Trail{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-title">
+        <span>Recorded Chain of Custody Audit Log</span>
+        <select id="auditCaseSelect" class="form-control" style="width: auto; padding: 6px 12px; font-size: 12px;" onchange="location.href='{{ url_for('audit_view') }}?case_id=' + this.value">
+            <option value="">All Cases</option>
+            {% for c in cases %}
+            <option value="{{ c.case_id }}" {% if selected_case_id == c.case_id %}selected{% endif %}>{{ c.case_id }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Case ID</th>
+                    <th>Operation Event</th>
+                    <th>Event Description</th>
+                    <th>Associated Artifact</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in audit_logs %}
+                <tr>
+                    <td style="font-size: 12px; color: var(--text-muted); width: 170px;">{{ log.timestamp }}</td>
+                    <td><strong style="color: var(--text-highlight);">{{ log.case_id or 'SYSTEM' }}</strong></td>
+                    <td>
+                        <span class="badge" style="background: var(--bg-input); color: var(--text-highlight); border: 1px solid var(--border-color);">
+                            {{ log.operation }}
+                        </span>
+                    </td>
+                    <td style="font-size: 13px;">{{ log.description }}</td>
+                    <td>
+                        {% if log.artifact_id %}
+                        <button onclick="openArtifactModal({{ log.artifact_id }})" class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px;">Artifact #{{ log.artifact_id }}</button>
+                        {% else %}
+                        <span style="color: var(--text-muted); font-size: 11px;">N/A</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                        No audit events recorded yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

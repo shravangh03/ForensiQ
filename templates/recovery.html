@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}Recovery Studio — ForensiQ{% endblock %}
+{% block page_title %}ForensiQ Recovery Studio (Read-Only Carving Engine){% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-title">Select Evidence Media for Analysis</div>
+    <div class="grid-3col" style="align-items: end;">
+        
+        <div class="form-group" style="margin: 0;">
+            <label class="form-label">Active Case</label>
+            <select id="caseSelect" class="form-control" onchange="location.href='{{ url_for('recovery_studio') }}?case_id=' + this.value">
+                {% for c in cases %}
+                <option value="{{ c.case_id }}" {% if selected_case and selected_case.case_id == c.case_id %}selected{% endif %}>{{ c.case_id }} — {{ c.investigator }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group" style="margin: 0;">
+            <label class="form-label">Target Disk Image (.raw / .dd)</label>
+            <select id="evidenceSelect" class="form-control">
+                {% for ev in evidence_list %}
+                <option value="{{ ev.id }}">{{ ev.filename }} ({{ "{:,}".format(ev.size) }} B)</option>
+                {% else %}
+                <option value="">No evidence imported for this case</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            {% if evidence_list and selected_case %}
+            <button id="startScanBtn" onclick="startAnalysis('{{ selected_case.case_id }}', document.getElementById('evidenceSelect').value)" class="btn btn-primary" style="width: 100%; justify-content: center; height: 42px;">
+                ⚡ START FORENSIC ANALYSIS
+            </button>
+            {% else %}
+            <button class="btn btn-secondary" disabled style="width: 100%; justify-content: center; height: 42px;">
+                Import Evidence First
+            </button>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<!-- Live Progress Visualizer -->
+<div class="card">
+    <div class="card-title">Live Carving & Analysis Execution Stream</div>
+    
+    <div id="progressText" style="font-size: 13px; color: var(--text-highlight); margin-bottom: 8px;">
+        Ready to initiate read-only disk stream analysis...
+    </div>
+
+    <div class="progress-container">
+        <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <div class="grid-4col" style="margin-top: 20px;">
+        <div style="background: var(--bg-input); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); text-align: center;">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Write-Blocker</div>
+            <div style="font-size: 14px; font-weight: bold; color: var(--accent-emerald); margin-top: 4px;">ACTIVE (Read-Only)</div>
+        </div>
+        <div style="background: var(--bg-input); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); text-align: center;">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Signature Engine</div>
+            <div style="font-size: 14px; font-weight: bold; color: var(--text-highlight); margin-top: 4px;">JPEG / PNG / PDF / TXT</div>
+        </div>
+        <div style="background: var(--bg-input); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); text-align: center;">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Integrity Hash</div>
+            <div style="font-size: 14px; font-weight: bold; color: var(--accent-amber); margin-top: 4px;">Streaming SHA-256</div>
+        </div>
+        <div style="background: var(--bg-input); padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); text-align: center;">
+            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Confidence Scoring</div>
+            <div style="font-size: 14px; font-weight: bold; color: var(--accent-blue); margin-top: 4px;">Rule-Based Index</div>
+        </div>
+    </div>
+</div>
+
+<!-- Existing Carved Artifacts Quick Overview -->
+{% if artifacts %}
+<div class="card">
+    <div class="card-title">Currently Carved Artifacts ({{ artifacts|length }} Total)</div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>File Type</th>
+                    <th>Sector Offset</th>
+                    <th>Size</th>
+                    <th>Confidence</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for art in artifacts %}
+                <tr>
+                    <td><strong>{{ art.filename }}</strong></td>
+                    <td>{{ art.file_type }}</td>
+                    <td><code>0x{{ "%X"|format(art.offset) }}</code></td>
+                    <td>{{ "{:,}".format(art.size) }} B</td>
+                    <td><strong style="color: {% if art.confidence >= 75 %}var(--accent-emerald){% else %}var(--accent-amber){% endif %};">{{ art.confidence }}%</strong></td>
+                    <td><span class="badge badge-{% if art.confidence >= 75 %}valid{% else %}corrupt{% endif %}">{{ art.validation_status }}</span></td>
+                    <td>
+                        <button onclick="openArtifactModal({{ art.id }})" class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px;">Inspect Hex & Preview</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
