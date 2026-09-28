@@ -44,6 +44,14 @@ function closeMobileSidebar() {
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     console.log("[ForensiQ Platform] Workstation UI Initialized.");
+    
+    // Close mobile menu or modal on Escape key press
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeMobileSidebar();
+            closeModal();
+        }
+    });
 });
 
 // 1. Recovery Scan Runner

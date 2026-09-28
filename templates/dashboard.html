@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}Dashboard — ForensiQ Workstation{% endblock %}
-{% block page_title %}ForensiQ Forensic & Sanitization Dashboard{% endblock %}
+{% block page_title %}Forensic & Sanitization Dashboard{% endblock %}
 
 {% block content %}
 <!-- Overview Stats Grid -->
@@ -11,7 +11,7 @@
             <div class="stat-label">Active Cases</div>
             <div class="stat-val">{{ total_cases }}</div>
         </div>
-        <svg width="32" height="32" fill="none" stroke="var(--text-highlight)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+        <svg width="28" height="28" fill="none" stroke="var(--text-highlight)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
     </div>
 
     <div class="stat-card">
@@ -19,7 +19,7 @@
             <div class="stat-label">Evidence Images</div>
             <div class="stat-val">{{ total_evidence }}</div>
         </div>
-        <svg width="32" height="32" fill="none" stroke="var(--accent-blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12" y2="6"></line><line x1="6" y1="12" x2="18" y2="12"></line></svg>
+        <svg width="28" height="28" fill="none" stroke="var(--accent-blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12" y2="6"></line><line x1="6" y1="12" x2="18" y2="12"></line></svg>
     </div>
 
     <div class="stat-card">
@@ -27,7 +27,7 @@
             <div class="stat-label">Artifacts Carved</div>
             <div class="stat-val">{{ total_artifacts }}</div>
         </div>
-        <svg width="32" height="32" fill="none" stroke="var(--accent-emerald)" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        <svg width="28" height="28" fill="none" stroke="var(--accent-emerald)" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
     </div>
 
     <div class="stat-card">
@@ -35,20 +35,22 @@
             <div class="stat-label">High Confidence (&ge;75%)</div>
             <div class="stat-val" style="color: var(--accent-emerald);">{{ high_conf_count }}</div>
         </div>
-        <svg width="32" height="32" fill="none" stroke="var(--accent-emerald)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <svg width="28" height="28" fill="none" stroke="var(--accent-emerald)" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
     </div>
 </div>
 
 <!-- Quick Actions & Case Overview -->
 <div class="grid-2fr-1fr">
     
-    <!-- Recent Cases Table -->
+    <!-- Recent Cases Card -->
     <div class="card">
         <div class="card-title">
             <span>Recent Active Cases</span>
-            <a href="{{ url_for('cases_view') }}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">View All</a>
+            <a href="{{ url_for('cases_view') }}" class="btn btn-secondary" style="padding: 5px 12px; font-size: 12px; min-height: 32px;">View All</a>
         </div>
-        <div class="table-responsive">
+        
+        <!-- Desktop Table View -->
+        <div class="desktop-table-container table-responsive">
             <table class="data-table">
                 <thead>
                     <tr>
@@ -65,7 +67,7 @@
                         <td>{{ c.investigator }}</td>
                         <td>{{ c.created_at }}</td>
                         <td>
-                            <a href="{{ url_for('recovery_studio', case_id=c.case_id) }}" class="btn btn-primary" style="padding: 4px 10px; font-size: 12px;">Run Recovery</a>
+                            <a href="{{ url_for('recovery_studio', case_id=c.case_id) }}" class="btn btn-primary" style="padding: 4px 10px; font-size: 12px; min-height: 30px;">Run Recovery</a>
                         </td>
                     </tr>
                     {% else %}
@@ -75,6 +77,33 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+
+        <!-- Mobile Card View Component (Shown on <= 768px) -->
+        <div class="mobile-cases-list">
+            {% for c in recent_cases %}
+            <div class="mobile-case-card">
+                <div class="mobile-case-card-header">
+                    <div>
+                        <span style="font-size: 10px; color: var(--text-muted); text-transform: uppercase;">CASE ID</span>
+                        <div style="font-weight: 700; color: var(--text-highlight); font-size: 15px;">{{ c.case_id }}</div>
+                    </div>
+                    <a href="{{ url_for('recovery_studio', case_id=c.case_id) }}" class="btn btn-primary" style="padding: 5px 12px; font-size: 12px; min-height: 32px;">Run Recovery</a>
+                </div>
+                <div class="mobile-case-card-body">
+                    <div class="mobile-case-info-item">
+                        <span style="color: var(--text-muted);">Investigator:</span>
+                        <span style="color: var(--text-main); font-weight: 500;">{{ c.investigator }}</span>
+                    </div>
+                    <div class="mobile-case-info-item">
+                        <span style="color: var(--text-muted);">Created:</span>
+                        <span style="color: var(--text-muted); font-size: 12px;">{{ c.created_at }}</span>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div style="text-align: center; color: var(--text-muted); padding: 20px;">No cases created yet.</div>
+            {% endfor %}
         </div>
     </div>
 

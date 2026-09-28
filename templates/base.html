@@ -10,10 +10,10 @@
 </head>
 <body>
 
-    <!-- Mobile Sidebar Backdrop Overlay -->
+    <!-- Mobile Sidebar Backdrop Overlay (z-index 1000) -->
     <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleMobileSidebar()"></div>
 
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar Navigation Drawer (z-index 1100 on mobile) -->
     <aside class="sidebar" id="appSidebar">
         <div class="brand">
             <div class="brand-icon">Q</div>
@@ -81,23 +81,26 @@
     <!-- Main Content Container -->
     <div class="main-wrapper">
         <header class="header-bar">
-            <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="header-left">
                 <button class="mobile-menu-btn" onclick="toggleMobileSidebar()" aria-label="Open Navigation Menu">
                     <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </button>
-                <div class="page-title">{% block page_title %}ForensiQ Workstation{% endblock %}</div>
+                <div class="page-title-box">
+                    <div class="brand-title-mobile">ForensiQ</div>
+                    <div class="page-title">{% block page_title %}Forensic & Sanitization Dashboard{% endblock %}</div>
+                </div>
             </div>
 
             <div class="header-actions">
                 <!-- Theme Selector -->
                 <div class="theme-select-container">
-                    <svg width="15" height="15" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+                    <svg width="14" height="14" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
                     <select id="themeSelector" onchange="changeTheme(this.value)" class="form-control theme-select-input">
-                        <option value="slate-zinc">Slate & Zinc Enterprise Dark</option>
+                        <option value="slate-zinc">Slate & Zinc</option>
                         <option value="cyber-midnight">Cyber Midnight</option>
                         <option value="emerald-matrix">Emerald Matrix</option>
                         <option value="obsidian-crimson">Obsidian Crimson</option>
-                        <option value="zinc-light">Zinc Enterprise Light</option>
+                        <option value="zinc-light">Zinc Light</option>
                     </select>
                 </div>
                 <span class="badge badge-valid demo-badge">SAFE DEMO</span>
